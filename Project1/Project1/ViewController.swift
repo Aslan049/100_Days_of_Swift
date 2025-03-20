@@ -28,7 +28,6 @@ class ViewController: UITableViewController {
                 pictures.append(item)
             }
         }
-       // print(pictures)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -43,7 +43,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     }
     
     @objc func openTapped() {
-        let ac = UIAlertController(title: "Open page...", message: nil, preferredStyle: .actionSheet)
+        let ac = UIAlertController(title: "Open Page...", message: nil, preferredStyle: .actionSheet)
         
         for webSite in webSites {
             ac.addAction(UIAlertAction(title: webSite, style: .default, handler: openPage))

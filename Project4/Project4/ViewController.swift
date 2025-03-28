@@ -48,12 +48,11 @@ class ViewController: UIViewController, WKNavigationDelegate {
         for webSite in webSites {
             ac.addAction(UIAlertAction(title: webSite, style: .default, handler: openPage))
         }
-        
-        ac.addAction(UIAlertAction(title: "apple.com", style: .default, handler: openPage))
-        
+           
         ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         ac.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         present(ac, animated: true)
+        
     }
     
     func openPage(_ action: UIAlertAction) {

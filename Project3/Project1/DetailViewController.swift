@@ -40,12 +40,12 @@ class DetailViewController: UIViewController {
     @objc func shareTapped() {
         
         guard let image = imageView.image?.jpegData(compressionQuality: 0.8) else {
-            print("no image found")
+            print("No image found")
             return
         }
         
         guard let name = selectedImage else {
-            print("no name found")
+            print("No name found")
             return
         }
         

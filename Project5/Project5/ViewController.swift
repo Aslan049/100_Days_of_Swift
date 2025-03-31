@@ -15,8 +15,26 @@ class ViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        readFile()
+        startGame()
+        barButtons()
+        
+    }
+    
+    func barButtons() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(startGameAgain))
+    }
+    
+    
+    @objc func startGameAgain() {
+        startGame()
+    }
+    
+    func readFile() {
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
-            if let startWords = try? String(contentsOf: startWordsURL , encoding: .utf8) {
+            if let startWords = try? String(contentsOf: startWordsURL, encoding: .utf8){
                 allWords = startWords.components(separatedBy: "\n")
             }
         }
@@ -24,24 +42,21 @@ class ViewController: UITableViewController {
         if allWords.isEmpty {
             allWords = ["silkworm"]
         }
-        
-        startGame()
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(promptForAnswer))
     }
     
+    
     @objc func promptForAnswer() {
-        let ac = UIAlertController(title: "Enter answer", message: nil, preferredStyle: .alert)
+        let ac = UIAlertController(title: "Enter answer", message: "related by: \(title ?? "Unknown word")", preferredStyle: .alert)
         ac.addTextField()
         
         let submitAction = UIAlertAction(title: "Submit", style: .default) { [weak self, weak ac] _ in
             guard let answer = ac?.textFields?[0].text else { return }
             self?.submit(answer)
         }
-        let submit2Action = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
     
         ac.addAction(submitAction)
-        ac.addAction(submit2Action)
+        ac.addAction(cancelAction)
         //ac.addAction(UIAlertAction(title: "Cancel", style: .default))
         present(ac, animated: true)
         
@@ -50,35 +65,33 @@ class ViewController: UITableViewController {
     func submit(_ answer: String) {
         let lowerAnswer = answer.lowercased()
         
-        let errorTitle: String
-        let errorMessage: String
-        
         if isPossible(word: lowerAnswer) {
             if isOriginal(word: lowerAnswer) {
                 if isReal(word: lowerAnswer) {
-                    usedWords.insert(lowerAnswer, at: 0)
                     
+                    usedWords.insert(lowerAnswer, at: 0)
                     let indexPath = IndexPath(row: 0, section: 0)
                     tableView.insertRows(at: [indexPath], with: .automatic)
-                   
+                    
                     return
                 } else {
-                    errorTitle = "Word not recognized"
-                    errorMessage = "Please enter a valid English word."
+                    showErrorMessage(title: "Word not recognized", message: "Please enter a valid English word.")
                 }
             } else {
-                errorTitle = "Word already used"
-                errorMessage = "Please choose another word."
+                showErrorMessage(title: "Word already used", message: "Please choose another word.")
             }
         } else {
             guard let title = title else { return }
-            errorTitle = "Word not possible"
-            errorMessage = "You can't spell that word from \(title.lowercased())."
+            showErrorMessage(title: "Word not possible", message: "You can't spell that word from \(title.lowercased()).")
         }
         
-        let ac = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
+    }
+    
+    func showErrorMessage(title: String, message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+        
     }
     
     func isPossible(word: String) -> Bool {
@@ -100,6 +113,7 @@ class ViewController: UITableViewController {
     }
     
     func isReal(word: String) -> Bool {
+        if (word.count < 3 || word == title) { return false }
         let checker = UITextChecker()
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")

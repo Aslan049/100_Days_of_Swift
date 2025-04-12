@@ -12,8 +12,8 @@ class ViewController: UIViewController {
     var answerLabel: UILabel!
     var currentAnswer: UITextField!
     var scoreLabel: UILabel!
-    var letterButtons = [UIButton]()
     
+    var letterButtons = [UIButton]()
     var activatedButtons = [UIButton]()
     var solutions = [String]()
 
@@ -161,11 +161,16 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
+            
             if score % 7 == 0 {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
+        } else {
+            let ac = UIAlertController(title: "Oops!", message: "Try again.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
         }
     }
     
@@ -194,8 +199,8 @@ class ViewController: UIViewController {
         var solutionString = ""
         var letterBits = [String]()
         
-        if let levelFileURL = Bundle.main.path(forResource: "level\(level)", ofType: "txt") {
-            if let levelContents = try? String(contentsOfFile: levelFileURL) {
+        if let levelFilePath = Bundle.main.path(forResource: "level\(level)", ofType: "txt") {
+            if let levelContents = try? String(contentsOfFile: levelFilePath, encoding: .utf8) {
                 var lines = levelContents.components(separatedBy: "\n")
                 lines.shuffle()
                 
@@ -216,13 +221,14 @@ class ViewController: UIViewController {
                 }
             }
         }
+        
         cluesLabel.text = cluesString.trimmingCharacters(in: .whitespacesAndNewlines)
         answerLabel.text = solutionString.trimmingCharacters(in: .whitespacesAndNewlines)
         
         letterButtons.shuffle()
         
-        if letterButtons.count == letterBits.count {
-            for i in 0..<letterButtons.count {
+        if letterBits.count == letterButtons.count {
+            for i in 0..<letterBits.count {
                 letterButtons[i].setTitle(letterBits[i], for: .normal)
             }
         }

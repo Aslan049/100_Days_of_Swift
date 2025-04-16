@@ -23,7 +23,6 @@ class ViewController: UICollectionViewController {
             fatalError("Unable to dequeue PersonCell.")
             
         }
-        cell.label.text = "Aslan Korkmaz"
         return cell
     }
 

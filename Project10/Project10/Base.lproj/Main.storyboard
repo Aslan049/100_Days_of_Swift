@@ -42,7 +42,7 @@
                                 <size key="customSize" width="140" height="180"/>
                                 <connections>
                                     <outlet property="imageView" destination="kQ9-6A-3XE" id="9QO-Hu-8qL"/>
-                                    <outlet property="label" destination="eiz-6k-Mr2" id="YZn-3l-rrb"/>
+                                    <outlet property="name" destination="eiz-6k-Mr2" id="YZn-3l-rrb"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

@@ -40,6 +40,7 @@ class ViewController: UICollectionViewController, UIImagePickerControllerDelegat
         return cell
     }
 
+    //Set Picker
     @objc func addNewPerson() {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
